@@ -4,11 +4,6 @@
 # ==============================================================================
 # Start OpenThread BorderRouter web interface
 # ==============================================================================
+
 bashio::log.info "Starting otbr-web..."
-declare otbr_web_port
-
-# TODO
-otbr_web_port="8080"
-#otbr_web_port="$(bashio::addon.port 8080)"
-
-exec /usr/sbin/otbr-web -I wpan0 -d6 -p "${otbr_web_port}"
+exec /usr/sbin/otbr-web -I wpan0 -d6 -p "${OTBR_WEB_PORT}"

@@ -4,8 +4,18 @@ services:
     restart: unless-stopped
     devices:
       - "/dev/ttyUSB0:/dev/ttyUSB0"
-    privileged:
-        true
+      - "/dev/net/tun:/dev/net/tun"
+    privileged: true
+    cap_add:
+      - NET_ADMIN
+    volumes:
+      - ./otbr_data:/data/thread
+    networks:
+      - home-assistant_ip6net
+    ports:
+      - "9997:8081" # OTBR REST API
+      - "9998:9998" # OTBR web interface
+      - "9999:9999" # Zigbee
     environment:
       SUPERVISOR_API: "http://YOUR_HOMEASSISTANT_URL.local" # set to your local Home Assistant URL
       SUPERVISOR_TOKEN: "ey..." # set to your long-lived access token
@@ -14,3 +24,23 @@ services:
       BAUDRATE: "115200" # configure dongle baud rate
       FLOW_CONTROL: "false" # set to true if dongle needs hardware flow control
       CPCD_TRACE: "false"
+      #OTBR_API_PORT: 9997 # always 8081, not configurable at the moment
+      OTBR_WEB_PORT: 9998
+      ZIGBEED_PORT: 9999
+
+  matter-server:
+    image: ghcr.io/home-assistant-libs/python-matter-server:stable
+    container_name: matter-server
+    restart: unless-stopped
+    privileged: true
+    networks:
+      - home-assistant_ip6net
+    ports:
+      - "5580:5580"
+    volumes:
+      - ./matter_data:/data/
+      - /run/dbus:/run/dbus:ro  # bluetooth
+networks:
+  home-assistant_ip6net:
+    external: true
+    enable_ipv6: true
