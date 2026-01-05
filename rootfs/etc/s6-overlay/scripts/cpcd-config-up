@@ -1,0 +1,21 @@
+#!/usr/bin/with-contenv bashio
+# vim: ft=bash
+# shellcheck shell=bash
+# ==============================================================================
+# Generate Silicon Labs Multiprotocol configurations
+# ==============================================================================
+
+if [ ! -f "$DEVICE" ]; then
+    bashio::log.red "SERIAL DEVICE $DEVICE NOT FOUND"
+    bashio::exit.nok
+fi
+
+bashio::log.info "Generating cpcd configuration."
+bashio::var.json \
+    device "${DEVICE}" \
+    baudrate "${BAUDRATE}" \
+    flow_control "${FLOW_CONTROL}" \
+    cpcd_trace "${CPCD_TRACE}" \
+    | tempio \
+        -template /usr/local/share/cpcd.conf \
+        -out /usr/local/etc/cpcd.conf

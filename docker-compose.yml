@@ -1,0 +1,12 @@
+services:
+  silabs-multiprotocol:
+    image: silabs-multiprotocol:latest
+    restart: unless-stopped
+    environment:
+      SUPERVISOR_API: "http://YOUR_HOMEASSISTANT_URL.local" # set to your local Home Assistant URL
+      SUPERVISOR_TOKEN: "ey..." # set to your long-lived access token
+      OTBR_ENABLE: "true"
+      DEVICE: "/dev/ttyUSB0" # configure dongle serial port
+      BAUDRATE: "115200" # configure dongle baud rate
+      FLOW_CONTROL: "false" # set to true if dongle needs hardware flow control
+      CPCD_TRACE: "false"
