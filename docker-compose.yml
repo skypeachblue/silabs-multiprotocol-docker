@@ -2,6 +2,10 @@ services:
   silabs-multiprotocol:
     image: silabs-multiprotocol:latest
     restart: unless-stopped
+    devices:
+      - "/dev/ttyUSB0:/dev/ttyUSB0"
+    privileged:
+        true
     environment:
       SUPERVISOR_API: "http://YOUR_HOMEASSISTANT_URL.local" # set to your local Home Assistant URL
       SUPERVISOR_TOKEN: "ey..." # set to your long-lived access token

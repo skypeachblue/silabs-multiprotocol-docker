@@ -5,7 +5,7 @@
 # Generate Silicon Labs Multiprotocol configurations
 # ==============================================================================
 
-if [ ! -f "$DEVICE" ]; then
+if [ ! -e "$DEVICE" ]; then
     bashio::log.red "SERIAL DEVICE $DEVICE NOT FOUND"
     bashio::exit.nok
 fi
