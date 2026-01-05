@@ -1,3 +1,3 @@
 [submodule "bashio4docker"]
 	path = bashio4docker
-	url = git@github.com:skypeachblue/bashio4docker.git
+	url = https://github.com/skypeachblue/bashio4docker.git
