@@ -9,6 +9,7 @@
 . /etc/s6-overlay/scripts/otbr-agent-common
 
 declare backbone_if
+declare thread_if
 # shellcheck disable=SC2034
 declare device
 # shellcheck disable=SC2034
@@ -24,6 +25,7 @@ declare otbr_rest_listen_port
 # TODO: make configurable?
 # name of the interface inside the docker container (usually eth0)
 backbone_if="eth0"
+thread_if="wpan0"
 
 # TODO make configurable
 otbr_log_level="warning"

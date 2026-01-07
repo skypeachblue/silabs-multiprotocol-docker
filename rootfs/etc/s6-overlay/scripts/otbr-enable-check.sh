@@ -5,7 +5,7 @@
 # ==============================================================================
 
 # TODO: make configurable
-WEB_EXPOSED="true" # 8080
+WEB_EXPOSED="true" # OTBR_WEB_PORT
 API_EXPOSED="true" # 8081
 
 

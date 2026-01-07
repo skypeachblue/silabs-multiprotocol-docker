@@ -1,21 +1,21 @@
 services:
   silabs-multiprotocol:
     image: silabs-multiprotocol:latest
+    build:
+      dockerfile: ./Dockerfile
     restart: unless-stopped
+    network_mode: host # required
     devices:
       - "/dev/ttyUSB0:/dev/ttyUSB0"
       - "/dev/net/tun:/dev/net/tun"
+      - "/dev/pts/0:/dev/pts/0" # important for zigbeed sockets
+      - "/dev/pts/1:/dev/pts/1" # important for zigbeed socketsg
     privileged: true
     cap_add:
       - NET_ADMIN
     volumes:
       - ./otbr_data:/data/thread
-    networks:
-      - home-assistant_ip6net
-    ports:
-      - "9997:8081" # OTBR REST API
-      - "9998:9998" # OTBR web interface
-      - "9999:9999" # Zigbee
+      - ./zigbeed_data:/data/zigbeed
     environment:
       SUPERVISOR_API: "http://YOUR_HOMEASSISTANT_URL.local" # set to your local Home Assistant URL
       SUPERVISOR_TOKEN: "ey..." # set to your long-lived access token
@@ -24,7 +24,6 @@ services:
       BAUDRATE: "115200" # configure dongle baud rate
       FLOW_CONTROL: "false" # set to true if dongle needs hardware flow control
       CPCD_TRACE: "false"
-      #OTBR_API_PORT: 9997 # always 8081, not configurable at the moment
       OTBR_WEB_PORT: 9998
       ZIGBEED_PORT: 9999
 
@@ -32,15 +31,11 @@ services:
     image: ghcr.io/home-assistant-libs/python-matter-server:stable
     container_name: matter-server
     restart: unless-stopped
+    network_mode: host
     privileged: true
-    networks:
-      - home-assistant_ip6net
-    ports:
-      - "5580:5580"
+    security_opt:
+      - apparmor:unconfined # needed for bluetooth
     volumes:
       - ./matter_data:/data/
-      - /run/dbus:/run/dbus:ro  # bluetooth
-networks:
-  home-assistant_ip6net:
-    external: true
-    enable_ipv6: true
+      - /run/dbus:/run/dbus:ro  # needed for bluetooth
+    command: --storage-path /data --paa-root-cert-dir /data/credentials --bluetooth-adapter 1 # change bluetooth adapter ID here
