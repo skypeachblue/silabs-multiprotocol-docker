@@ -24,7 +24,7 @@ declare otbr_rest_listen_port
 # backbone_if="$(bashio::api.supervisor 'GET' '/network/info' '' 'first(.interfaces[] | select (.primary == true)) .interface')"
 # TODO: make configurable?
 # name of the interface inside the docker container (usually eth0)
-backbone_if="eth0"
+backbone_if="wpan0"
 thread_if="wpan0"
 
 # TODO make configurable

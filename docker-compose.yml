@@ -4,12 +4,12 @@ services:
     build:
       dockerfile: ./Dockerfile
     restart: unless-stopped
-    network_mode: host # required
+    network_mode: host # required for mDNS
     devices:
       - "/dev/ttyUSB0:/dev/ttyUSB0"
       - "/dev/net/tun:/dev/net/tun"
       - "/dev/pts/0:/dev/pts/0" # important for zigbeed sockets
-      - "/dev/pts/1:/dev/pts/1" # important for zigbeed socketsg
+      - "/dev/pts/1:/dev/pts/1" # important for zigbeed sockets
     privileged: true
     cap_add:
       - NET_ADMIN
@@ -28,10 +28,10 @@ services:
       ZIGBEED_PORT: 9999
 
   matter-server:
-    image: ghcr.io/home-assistant-libs/python-matter-server:stable
+    image: ghcr.io/home-assistant-libs/python-matter-server:beta
     container_name: matter-server
     restart: unless-stopped
-    network_mode: host
+    network_mode: host # required for mDNS
     privileged: true
     security_opt:
       - apparmor:unconfined # needed for bluetooth
