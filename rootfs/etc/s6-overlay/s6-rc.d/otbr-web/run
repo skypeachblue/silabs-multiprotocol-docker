@@ -5,5 +5,5 @@
 # Start OpenThread BorderRouter web interface
 # ==============================================================================
 
-bashio::log.info "Starting otbr-web..."
+bashio::log.info "Starting otbr-web on port ${OTBR_WEB_PORT}..."
 exec /usr/sbin/otbr-web -I wpan0 -d6 -p "${OTBR_WEB_PORT}"

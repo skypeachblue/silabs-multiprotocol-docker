@@ -6,5 +6,5 @@
 # ==============================================================================
 # shellcheck disable=SC2015
 
-bashio::log.info "Starting zigbeed-tcp..."
+bashio::log.info "Starting zigbeed-tcp on port ${ZIGBEED_PORT}..."
 exec /usr/bin/socat TCP-LISTEN:${ZIGBEED_PORT},reuseaddr,fork FILE:/tmp/ttyZigbee,raw,echo=0,b115200

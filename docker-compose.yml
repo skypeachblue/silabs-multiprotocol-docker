@@ -1,34 +1,37 @@
 services:
   silabs-multiprotocol:
-    image: silabs-multiprotocol:latest
+    container_name: silabs-multiprotocol
     build:
-      dockerfile: ./Dockerfile
+      context: .
+      args:
+        - BUILD_ARCH=aarch64 # aarch64 / amd64 / armv7
+    image: silabs-multiprotocol:latest
+    pull_policy: never
     restart: unless-stopped
     network_mode: host # required for mDNS
     devices:
-      - "/dev/ttyUSB0:/dev/ttyUSB0"
-      - "/dev/net/tun:/dev/net/tun"
-      - "/dev/pts/0:/dev/pts/0" # important for zigbeed sockets
-      - "/dev/pts/1:/dev/pts/1" # important for zigbeed sockets
-    privileged: true
+      - "/dev/ttyUSB0:/dev/ttyUSB0" # configure dongle serial port
+      - "/dev/pts/0:/dev/pts/0" # important for zigbeed sockets, do not change
+      - "/dev/pts/1:/dev/pts/1" # important for zigbeed sockets, do not change
+    privileged: true # required
     cap_add:
-      - NET_ADMIN
+      - NET_ADMIN # required
     volumes:
       - ./otbr_data:/data/thread
       - ./zigbeed_data:/data/zigbeed
     environment:
       SUPERVISOR_API: "http://YOUR_HOMEASSISTANT_URL.local" # set to your local Home Assistant URL
       SUPERVISOR_TOKEN: "ey..." # set to your long-lived access token
-      OTBR_ENABLE: "true"
       DEVICE: "/dev/ttyUSB0" # configure dongle serial port
       BAUDRATE: "115200" # configure dongle baud rate
-      FLOW_CONTROL: "false" # set to true if dongle needs hardware flow control
-      CPCD_TRACE: "false"
-      OTBR_WEB_PORT: 9998
+      FLOW_CONTROL: "false" # set to true if dongle has hardware flow control
+      OTBR_WEB_PORT: 9998 # set to 0 to disable the OTBR web interface
       ZIGBEED_PORT: 9999
+      OTBR_LOG_LEVEL: 4 # log level (0=emergency ... 7=debug)
+      ZIGBEED_LOG_LEVEL: 2 # 0=NONE, 1=CRIT, 2=WARN, 3=NOTE, 4=INFO, 5=DEBG
 
   matter-server:
-    image: ghcr.io/home-assistant-libs/python-matter-server:beta
+    image: ghcr.io/home-assistant-libs/python-matter-server:8.1.0
     container_name: matter-server
     restart: unless-stopped
     network_mode: host # required for mDNS

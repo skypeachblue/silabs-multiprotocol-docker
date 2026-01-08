@@ -1,8 +1,5 @@
-# choose platform:
-
-FROM ghcr.io/ihost-open-source-project/hassio-ihost-silabs-multiprotocol-aarch64:1.0.0
-# FROM ghcr.io/ihost-open-source-project/hassio-ihost-silabs-multiprotocol-amd64:1.0.0
-
+ARG BUILD_ARCH=aarch64
+FROM ghcr.io/ihost-open-source-project/hassio-ihost-silabs-multiprotocol-$BUILD_ARCH:1.0.0
 
 # remove existing bashio and replace with our own
 RUN rm -rf /usr/bin/bashio && \
